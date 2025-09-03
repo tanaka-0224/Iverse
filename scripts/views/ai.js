@@ -21,8 +21,7 @@ export function initAI(){
   // スワイプ機能の初期化
   initSwipeFunctionality();
   
-  // リフレッシュボタンのイベントを設定
-  bindRefreshButton();
+  // リフレッシュボタンは廃止
 }
 
 export function renderAI(){
@@ -82,8 +81,8 @@ function renderCards() {
     return;
   }
   
-  // 最大3枚のカードを重ねて表示
-  const maxCards = Math.min(3, shuffledUsers.length);
+  // 最大2枚のカードを重ねて表示（背景は1枚まで）
+  const maxCards = Math.min(2, shuffledUsers.length);
   for (let i = 0; i < maxCards; i++) {
     const user = shuffledUsers[i];
     const card = createCard(user, i === 0);
@@ -102,10 +101,8 @@ function createCard(user, isTop) {
   const card = document.createElement('div');
   card.className = 'card';
   
-  // カードの重なり表示を改善
-  if (!isTop) {
-    card.style.zIndex = isTop ? 3 : (isTop ? 2 : 1);
-  }
+  // カードの重なり表示を改善（トップ:3、背景:2）
+  card.style.zIndex = isTop ? 3 : 2;
   
   // スコアを計算
   const score = getTopMatches(state.me, [user], 1)[0]?.score || 0;
@@ -236,14 +233,10 @@ function initSwipeFunctionality() {
 
 function bindActionButtons() {
   const btnSkip = document.getElementById('btnSkip');
-  const btnSuperLike = document.getElementById('btnSuperLike');
   const btnLike = document.getElementById('btnLike');
   
   if (btnSkip) {
     btnSkip.addEventListener('click', () => swipeCard('left'));
-  }
-  if (btnSuperLike) {
-    btnSuperLike.addEventListener('click', () => superLike());
   }
   if (btnLike) {
     btnLike.addEventListener('click', () => swipeCard('right'));
@@ -307,7 +300,8 @@ function updateCardPosition() {
   const rotate = currentX * 0.1;
   const scale = 1 - Math.abs(currentX) * 0.001;
   
-  currentCard.style.transform = `translate(${currentX}px, ${currentY}px) rotate(${rotate}deg) scale(${scale})`;
+  // 中央基準を維持（CSSの translateX(-50%) を前提に合成）
+  currentCard.style.transform = `translateX(-50%) translate(${currentX}px, ${currentY}px) rotate(${rotate}deg) scale(${scale})`;
   
   // スワイプ方向のインジケーター
   const swipeText = currentCard.querySelector('#swipeText');
@@ -355,6 +349,8 @@ function swipeCard(direction) {
   console.log('currentCardIndex before:', currentCardIndex);
   
   const swipeClass = direction === 'left' ? 'swipe-left' : 'swipe-right';
+  // インライン transform を一旦クリアしてクラスのアニメーションを反映
+  currentCard.style.transform = '';
   currentCard.classList.add(swipeClass);
   
   setTimeout(() => {
@@ -378,42 +374,7 @@ function swipeCard(direction) {
   }, 300);
 }
 
-function superLike() {
-  if (!currentCard) return;
-  
-  console.log('superLike called');
-  console.log('currentCardIndex before:', currentCardIndex);
-  
-  // スーパーいいねの特別なアニメーション
-  currentCard.style.transform = 'scale(1.1) rotate(5deg)';
-  currentCard.style.boxShadow = '0 20px 40px rgba(243, 156, 18, 0.4)';
-  
-  setTimeout(() => {
-    currentCard.style.transform = '';
-    currentCard.style.boxShadow = '';
-    
-    // スーパーいいねの処理
-    alert('⭐ スーパーいいねを送りました！');
-    
-    currentCardIndex++;
-    console.log('currentCardIndex after increment:', currentCardIndex);
-    console.log('shuffledUsers length:', shuffledUsers.length);
-    
-    // 次のカードがあるかチェック
-    if (currentCardIndex >= shuffledUsers.length) {
-      console.log('No more cards, shuffling...');
-      // カードがなくなった場合、新しいランダムデータを生成
-      shuffleUsers();
-      currentCardIndex = 0;
-      renderCards();
-      return;
-    }
-    
-    // 次のカードを表示（currentCardIndexをリセットしない）
-    console.log('Rendering next card...');
-    renderNextCard();
-  }, 1000);
-}
+// super like 機能は削除（UX簡素化のため）
 
 function bindRefreshButton() {
   const refreshBtn = document.getElementById('refresh-btn');
@@ -481,10 +442,9 @@ function renderNextCard() {
     return;
   }
   
-  // 現在のカードを削除
-  if (currentCard && currentCard.parentNode) {
-    console.log('Removing current card');
-    currentCard.parentNode.removeChild(currentCard);
+  // 既存のカードを全てクリアしてから描画（影の残りを防止）
+  while (cardContainer.firstChild) {
+    cardContainer.removeChild(cardContainer.firstChild);
   }
   
   // 次のカードを表示
@@ -495,7 +455,7 @@ function renderNextCard() {
     cardContainer.appendChild(card);
     currentCard = card;
     
-    // 次のカードも表示（重なり効果のため）
+    // 次のカードも表示（背景1枚のみ）
     if (currentCardIndex + 1 < shuffledUsers.length) {
       console.log('Creating background card for user:', shuffledUsers[currentCardIndex + 1].name);
       const nextUser = shuffledUsers[currentCardIndex + 1];

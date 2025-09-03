@@ -1,9 +1,9 @@
 /* ai.css */
 #view-ai {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 20px;
-  min-height: 100vh;
+  max-width: 900px;            /* 他ビューと同じ幅に揃える */
+  margin: 24px auto;           /* 他ビューと同じ余白に揃える */
+  padding: 0 16px;             /* 他ビューと同じパディングに揃える */
+  min-height: auto;            /* 不要な全高指定を解除 */
   display: flex;
   flex-direction: column;
 }
@@ -15,14 +15,14 @@
 }
 
 .ai-header h2 {
-  font-size: 28px;
+  font-size: 20px; /* 他ビューと統一 */
   font-weight: 600;
   margin-bottom: 10px;
   color: #2c3e50;
 }
 
 .ai-header .hint {
-  font-size: 16px;
+  font-size: 13px; /* base.css の .hint と合わせる */
   color: #7f8c8d;
   opacity: 0.8;
   margin-bottom: 20px;
@@ -94,7 +94,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 30px;
+  margin-top: 8px;      /* ヘッダーとの間隔を確保 */
+  margin-bottom: 56px; /* アクションボタンとの距離を確保 */
   min-height: 400px;
 }
 
@@ -102,7 +103,7 @@
 .card {
   position: absolute;
   width: 100%;
-  max-width: 350px;
+  max-width: 320px; /* 少し小さくする */
   background: white;
   border-radius: 20px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
@@ -111,6 +112,8 @@
   cursor: grab;
   user-select: none;
   border: 1px solid #e2e8f0;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .card.dragging {
@@ -132,25 +135,24 @@
 /* カードの重なり表示を改善 */
 .card:nth-child(1) {
   z-index: 3;
-  transform: scale(1) translateY(0);
+  transform: translateX(-50%) scale(1) translateY(0);
 }
 
 .card:nth-child(2) {
   z-index: 2;
-  transform: scale(0.95) translateY(8px);
+  transform: translateX(-50%) scale(0.95) translateY(8px);
   opacity: 0.9;
 }
 
-.card:nth-child(3) {
-  z-index: 1;
-  transform: scale(0.9) translateY(16px);
-  opacity: 0.8;
+/* 3枚目以降は表示しない（JS側でも2枚まで描画）*/
+.card:nth-child(n+3) {
+  display: none;
 }
 
 /* カード画像エリア */
 .card-image {
   width: 100%;
-  height: 200px;
+  height: 170px; /* 高さを少し低く */
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   display: flex;
   align-items: center;
@@ -179,7 +181,7 @@
 
 /* カードコンテンツ */
 .card-content {
-  padding: 20px;
+  padding: 16px; /* 余白を少し詰める */
 }
 
 .user-info {
@@ -188,7 +190,7 @@
 }
 
 .user-name {
-  font-size: 24px;
+  font-size: 18px; /* 他カードと同程度に縮小 */
   font-weight: 600;
   margin-bottom: 5px;
   color: #2c3e50;
@@ -221,14 +223,14 @@
 }
 
 .user-score {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   color: #667eea;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
 }
 
 .user-comment {
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.5;
   color: #555;
   text-align: center;
