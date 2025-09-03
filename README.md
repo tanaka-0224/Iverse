@@ -41,7 +41,7 @@ branch 命名規則：feature/issue-[実施する issue 番号]
 
 4. 作業する
 
-5. 作業完了したら github にコードをあげる(ターミナル：git add . → ターミナル：git commit -m "[やった作業を簡潔に]" → ターミナル：)
+5. 作業完了したら github にコードをあげる(ターミナル：git add . → ターミナル：git commit -m "[やった作業を簡潔に]" → ターミナル：git push origin feature/issue-1)
 
 
 6. Pull requests タブに遷移(url：https://github.com/tanaka-0224/Iverse/pulls )し、ボタンを押し、テンプレに沿って作成
