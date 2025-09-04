@@ -1,5 +1,24 @@
 <section id="view-ai" class="view hidden">
-  <h2>AIおすすめ</h2>
-  <p class="hint">目的一致＋スキル類似＋実績でスコアリング</p>
-  <div id="ai-list" class="grid"></div>
+  <div class="ai-header">
+    <h2>AIおすすめ</h2>
+    <p class="hint">目的一致＋スキル類似＋実績でスコアリング</p>
+  </div>
+  
+  <!-- カード表示エリア -->
+  <div class="card-container" id="cardContainer">
+    <!-- カードはJavaScriptで動的に生成 -->
+  </div>
+  
+  <!-- 操作ボタン -->
+  <div class="action-buttons">
+    <button class="action-btn btn-skip" id="btnSkip">
+      <span class="btn-icon">✕</span>
+    </button>
+    <button class="action-btn btn-like" id="btnLike">
+      <span class="btn-icon">♥</span>
+    </button>
+  </div>
+  
+  <!-- 従来のリスト表示（非表示） -->
+  <div id="ai-list" class="grid hidden"></div>
 </section>

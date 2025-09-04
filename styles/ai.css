@@ -1,12 +1,416 @@
 /* ai.css */
-#ai-list { max-width: 1000px; margin: 40px auto; padding: 20px; }
+#view-ai {
+  max-width: 900px;            /* 他ビューと同じ幅に揃える */
+  margin: 24px auto;           /* 他ビューと同じ余白に揃える */
+  padding: 0 16px;             /* 他ビューと同じパディングに揃える */
+  min-height: auto;            /* 不要な全高指定を解除 */
+  display: flex;
+  flex-direction: column;
+}
+
+.ai-header {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.ai-header h2 {
+  font-size: 20px; /* 他ビューと統一 */
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #2c3e50;
+}
+
+.ai-header .hint {
+  font-size: 13px; /* base.css の .hint と合わせる */
+  color: #7f8c8d;
+  opacity: 0.8;
+  margin-bottom: 20px;
+}
+
+/* リフレッシュボタン */
+.refresh-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.refresh-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.refresh-button:active {
+  transform: translateY(0);
+}
+
+.refresh-icon {
+  font-size: 16px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* リフレッシュメッセージのアニメーション */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+}
+
+/* カードコンテナ */
+.card-container {
+  flex: 1;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 8px;      /* ヘッダーとの間隔を確保 */
+  margin-bottom: 56px; /* アクションボタンとの距離を確保 */
+  min-height: 400px;
+}
+
+/* カードスタイル */
+.card {
+  position: absolute;
+  width: 320px; /* 固定幅 */
+  height: 450px; /* 高さを少し増やす */
+  max-width: 320px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: grab;
+  user-select: none;
+  border: 1px solid #e2e8f0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.card.dragging {
+  cursor: grabbing;
+  transition: none;
+  z-index: 1000;
+}
+
+.card.swipe-left {
+  transform: translateX(-120%) rotate(-15deg);
+  opacity: 0;
+}
+
+.card.swipe-right {
+  transform: translateX(120%) rotate(15deg);
+  opacity: 0;
+}
+
+/* カードの重なり表示を改善 */
+.card:nth-child(1) {
+  z-index: 3;
+  transform: translateX(-50%) scale(1) translateY(0);
+}
+
+.card:nth-child(2) {
+  z-index: 2;
+  transform: translateX(-50%) scale(0.95) translateY(8px);
+  opacity: 0.9;
+}
+
+/* 3枚目以降は表示しない（JS側でも2枚まで描画）*/
+.card:nth-child(n+3) {
+  display: none;
+}
+
+/* カード画像エリア */
+.card-image {
+  width: 100%;
+  height: 170px; /* 高さを少し低く */
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60px;
+  color: white;
+  position: relative;
+}
+
+.card-image::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  opacity: 0.9;
+}
+
+.card-image .avatar {
+  z-index: 1;
+  position: relative;
+  font-size: 60px;
+}
+
+/* カードコンテンツ */
+.card-content {
+  padding: 16px; /* 余白を少し詰める */
+  height: calc(100% - 170px); /* 画像部分を除いた高さを固定 */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* 上揃えに変更 */
+  overflow-y: auto; /* スクロール可能に */
+}
+
+.user-info {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.user-name {
+  font-size: 18px; /* 他カードと同程度に縮小 */
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #2c3e50;
+}
+
+.user-goal {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-block;
+  margin-bottom: 15px;
+}
+
+.user-skills {
+  margin-bottom: 15px;
+}
+
+.skill-tag {
+  display: inline-block;
+  background: #f1f5f9;
+  color: #475569;
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-size: 12px;
+  margin: 2px;
+  border: 1px solid #e2e8f0;
+}
+
+.user-score {
+  font-size: 16px;
+  font-weight: 600;
+  color: #667eea;
+  margin-bottom: 12px;
+}
+
+.user-comment {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #555;
+  text-align: center;
+  font-style: italic;
+}
+
+/* 操作ボタン */
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 40px;
+  padding: 20px 0;
+}
+
+.action-btn {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  font-size: 20px;
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.action-btn:active {
+  transform: translateY(0);
+}
+
+.btn-skip {
+  background: #e74c3c;
+  color: white;
+}
+
+.btn-super-like {
+  background: #f39c12;
+  color: white;
+}
+
+.btn-like {
+  background: #e91e63;
+  color: white;
+}
+
+.btn-icon {
+  font-size: 20px;
+}
+
+/* スワイプインジケーター */
+.swipe-indicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+  font-weight: bold;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.swipe-left .swipe-indicator {
+  opacity: 1;
+  color: #e74c3c;
+}
+
+.swipe-right .swipe-indicator {
+  opacity: 1;
+  color: #27ae60;
+}
+
+/* カードがない場合の表示 */
+.no-more-cards {
+  text-align: center;
+  color: #7f8c8d;
+  font-size: 18px;
+  opacity: 0.8;
+  padding: 40px 20px;
+}
+
+/* 従来のリスト表示（非表示） */
+#ai-list.hidden {
+  display: none;
+}
+
+#ai-list { 
+  max-width: 1000px; 
+  margin: 40px auto; 
+  padding: 20px; 
+}
+
 /* base group card */
-.group-card{ background:#fff;border:1px solid #eee;border-radius:12px;padding:14px; }
-.group-card h4{ margin:0 0 8px; color:#333; }
-.member{ font-size:13px; color:#666; margin:4px 0; }
-.meta{ color:#6b7280; font-size:12px; margin-top:4px; }
+.group-card{ 
+  background:#fff;
+  border:1px solid #eee;
+  border-radius:12px;
+  padding:14px; 
+}
+
+.group-card h4{ 
+  margin:0 0 8px; 
+  color:#333; 
+}
+
+.member{ 
+  font-size:13px; 
+  color:#666; 
+  margin:4px 0; 
+}
+
+.meta{ 
+  color:#6b7280; 
+  font-size:12px; 
+  margin-top:4px; 
+}
 
 /* enhanced visuals */
-.group-card{ display:flex; flex-direction:column; gap:8px; background:#f8fafc; border:1px solid #e2e8f0; box-shadow:0 3px 6px rgba(0,0,0,0.08); transition: transform 0.2s ease, box-shadow 0.2s ease; }
-.group-card:hover{ transform: translateY(-4px); box-shadow: 0 6px 14px rgba(0,0,0,0.18); }
-.group-card h4{ display:flex; align-items:center; gap:6px; margin-bottom:10px; }
+.group-card{ 
+  display:flex; 
+  flex-direction:column; 
+  gap:8px; 
+  background:#f8fafc; 
+  border:1px solid #e2e8f0; 
+  box-shadow:0 3px 6px rgba(0,0,0,0.08); 
+  transition: transform 0.2s ease, box-shadow 0.2s ease; 
+}
+
+.group-card:hover{ 
+  transform: translateY(-4px); 
+  box-shadow: 0 6px 14px rgba(0,0,0,0.18); 
+}
+
+.group-card h4{ 
+  display:flex; 
+  align-items:center; 
+  gap:6px; 
+  margin-bottom:10px; 
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  #view-ai {
+    padding: 15px;
+  }
+  
+  .card {
+    max-width: 100%;
+  }
+  
+  .action-buttons {
+    gap: 15px;
+  }
+  
+  .action-btn {
+    width: 55px;
+    height: 55px;
+  }
+  
+  .btn-icon {
+    font-size: 18px;
+  }
+  
+  .refresh-button {
+    padding: 10px 20px;
+    font-size: 13px;
+  }
+}
