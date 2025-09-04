@@ -1,11 +1,61 @@
 <section id="view-chat" class="view hidden">
-  <h2>メッセージ</h2>
-  <div class="card">
-    <div id="chat-header" class="chat-header">相手：<span id="chat-partner">未選択</span></div>
-    <div id="chat-log" class="chat-log"></div>
-    <div class="chat-input">
-      <input id="chat-text" type="text" placeholder="メッセージを入力" />
-      <button id="chat-send" type="button">送信</button>
+  <div class="chat-container">
+    <!-- チャットパートナー選択 -->
+    <div class="chat-partner-selector">
+      <div class="selector-header">
+        <div class="header-icon">💎</div>
+        <h3>チャットパートナーを選択</h3>
+        <div class="header-decoration"></div>
+      </div>
+      <div class="partner-list" id="partner-list">
+        <!-- パートナーリストはJavaScriptで動的に生成 -->
+      </div>
+    </div>
+
+    <!-- チャット画面 -->
+    <div class="chat-main" id="chat-main" style="display: none;">
+      <div class="chat-header">
+        <button class="back-btn" id="back-to-partners">
+          <span class="btn-icon">←</span>
+          <span class="btn-text">戻る</span>
+        </button>
+        <div class="partner-info">
+          <div class="partner-avatar" id="partner-avatar">👤</div>
+          <div class="partner-details">
+            <div class="partner-name" id="chat-partner">未選択</div>
+            <div class="partner-status">
+              <span class="status-dot"></span>
+              <span class="status-text">オンライン</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-messages" id="chat-log">
+        <!-- メッセージはJavaScriptで動的に生成 -->
+      </div>
+
+      <div class="chat-input-area">
+        <div class="chat-input-wrapper">
+          <div class="input-container">
+            <input 
+              id="chat-text" 
+              type="text" 
+              placeholder="メッセージを入力..." 
+              maxlength="500"
+            />
+            <div class="input-decoration"></div>
+          </div>
+          <button id="chat-send" type="button" class="send-btn">
+            <span class="send-icon">✉️</span>
+            <span class="send-text">送信</span>
+          </button>
+        </div>
+        <div class="input-hint">
+          <span class="hint-icon">💡</span>
+          <span>Enterキーで送信</span>
+        </div>
+      </div>
     </div>
   </div>
 </section>
