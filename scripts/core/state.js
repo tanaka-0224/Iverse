@@ -108,6 +108,7 @@ export const state = {
     { name:"タカシ", goal:"デザイン", skills:["UI","配色","広告"] },
     { name:"ユリ", goal:"デザイン", skills:["ロゴ","ポスター","Photoshop"] },
   ],
+   recruits: [], 
 };
 
 export function seedAchievements(){
@@ -202,15 +203,25 @@ export function makeGroupsByGoal(me, users, maxGroups=3){
 }
 
 const STORAGE_KEY = "iverse_state_v1";
-export function save(){ const data = { me: state.me, users: state.users }; localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
+export function save(){ const data = { me: state.me, users: state.users,recruits: state.recruits,  }; localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
 export function load(){
   const raw = localStorage.getItem(STORAGE_KEY); if(!raw) return;
   try{
     const saved = JSON.parse(raw);
-    const byName = new Map(state.users.map(u=>[u.name, u]));
-    (saved.users||[]).forEach(u=> byName.set(u.name, u));
-    
+
+    // users は既存ロジックでマージ（重複名は saved を優先）
+    const byName = new Map(state.users.map(u => [u.name, u]));
+    (saved.users || []).forEach(u => byName.set(u.name, u));
     state.users = [...byName.values()];
+
+    // me は従来通り
     state.me = saved.me || null;
-  }catch(e){ console.warn("restore failed", e); }
+
+    // ★ recruits を復元（なければ空配列のまま）
+    state.recruits = Array.isArray(saved.recruits) ? saved.recruits : state.recruits;
+
+  }catch(e){
+    console.warn("restore failed", e);
+  }
 }
+

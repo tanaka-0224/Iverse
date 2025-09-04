@@ -1,0 +1,90 @@
+#view-recruit { max-width: 900px; margin: 24px auto; padding: 0 16px; }
+#view-recruit textarea{
+  width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px;
+  font-size:14px; margin:6px 0 14px; background:#fff;
+}
+
+.recruit-card{
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+.recruit-card:hover{
+  transform: translateY(-3px);
+  box-shadow: 0 8px 18px rgba(0,0,0,.12);
+}
+.badge{ background:#eef3ff; color:#3355aa; padding:2px 8px; border-radius:999px; font-size:12px; }
+.muted{ color:#6b7280; }
+.tiny{ font-size:12px; }
+
+#view-recruit #radio-type-grid{
+  display:grid;
+  grid-template-columns: 110px 1fr;
+  column-gap:16px;
+  row-gap:12px;
+  align-items:center;
+  margin:12px 0;
+}
+#view-recruit #radio-type-grid .rt-label{
+  writing-mode: horizontal-tb;
+  height: 28px;
+  line-height: 28px;
+  display: flex;
+  align-items: center;
+  color:#374151;
+}
+#view-recruit #radio-type-grid .rt-ctrl{
+  display:flex;
+  align-items:center;
+  height:28px;                  
+}
+#view-recruit #radio-type-grid .rt-ctrl input[type="radio"]{
+ position: relative;
+  top: -2px;   /* 必要なら -1px/-3px に調整 */
+  margin: 0  
+}
+
+#view-recruit #radio-type-grid{
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  column-gap: 16px;
+  row-gap: 12px;
+  align-items: center;
+  margin: 12px 0;
+}
+
+#view-recruit #radio-type-grid .rt-label{
+  height: 28px;
+  line-height: 28px;
+  display: flex;
+  align-items: center;
+  writing-mode: horizontal-tb;
+}
+
+#view-recruit #radio-type-grid .rt-ctrl input[type="radio"]{
+  position: relative;
+  top: -2px;  /* -1〜-3pxで微調整可 */
+  margin: 0;
+}
+
+/* 自分の募集カードにだけ適用（他へ影響しない） */
+#view-recruit .recruit-card{
+  display: flex;
+  flex-direction: column;   /* 横並びで崩れるのを防ぐ */
+  align-items: flex-start;
+  gap: 6px;
+}
+
+/* カード配下は強制で横書きに戻す（縦書き指定を打ち消し） */
+#view-recruit .recruit-card,
+#view-recruit .recruit-card *{
+  writing-mode: horizontal-tb !important;
+  text-orientation: mixed !important;
+}
+
+/* タイトル体裁（任意） */
+#view-recruit .recruit-card .rc-title{
+  font-weight: 700;
+  margin-bottom: 4px;
+}
