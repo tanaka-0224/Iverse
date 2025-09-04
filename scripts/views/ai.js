@@ -13,6 +13,7 @@ let currentX = 0;
 let currentY = 0;
 let currentCard = null;
 let shuffledUsers = []; // シャッフルされたユーザー配列
+let isProcessingSwipe = false; // スワイプ処理中のフラグ
 
 export function initAI(){
   aiList = document.getElementById("ai-list");
@@ -81,17 +82,8 @@ function renderCards() {
     return;
   }
   
-  // 最大2枚のカードを重ねて表示（背景は1枚まで）
-  const maxCards = Math.min(2, shuffledUsers.length);
-  for (let i = 0; i < maxCards; i++) {
-    const user = shuffledUsers[i];
-    const card = createCard(user, i === 0);
-    cardContainer.appendChild(card);
-    
-    if (i === 0) {
-      currentCard = card;
-    }
-  }
+  // 常に2枚のカードを表示（現在 + 次の1枚）
+  renderCurrentAndNextCards();
   
   // 操作ボタンのイベントを再設定
   bindActionButtons();
@@ -343,34 +335,35 @@ function handleSwipeEnd() {
 }
 
 function swipeCard(direction) {
-  if (!currentCard) return;
+  if (!currentCard || isProcessingSwipe) return;
   
   console.log('swipeCard called with direction:', direction);
   console.log('currentCardIndex before:', currentCardIndex);
+  
+  // 処理中フラグを立てる
+  isProcessingSwipe = true;
   
   const swipeClass = direction === 'left' ? 'swipe-left' : 'swipe-right';
   // インライン transform を一旦クリアしてクラスのアニメーションを反映
   currentCard.style.transform = '';
   currentCard.classList.add(swipeClass);
   
+  // アニメーション完了後に一度だけ実行
   setTimeout(() => {
+    // 次のカードに進む
     currentCardIndex++;
-    console.log('currentCardIndex after increment:', currentCardIndex);
-    console.log('shuffledUsers length:', shuffledUsers.length);
     
-    // 次のカードがあるかチェック
+    // カードがなくなった場合はシャッフルしてリセット
     if (currentCardIndex >= shuffledUsers.length) {
-      console.log('No more cards, shuffling...');
-      // カードがなくなった場合、新しいランダムデータを生成
       shuffleUsers();
       currentCardIndex = 0;
-      renderCards();
-      return;
     }
     
-    // 次のカードを表示（currentCardIndexをリセットしない）
-    console.log('Rendering next card...');
-    renderNextCard();
+    // 現在と次のカードを再描画（一度だけ）
+    renderCurrentAndNextCards();
+    
+    // 処理完了フラグを下げる
+    isProcessingSwipe = false;
   }, 300);
 }
 
@@ -431,42 +424,26 @@ function showRefreshMessage() {
   }, 3000);
 }
 
-function renderNextCard() {
-  console.log('renderNextCard called');
-  console.log('cardContainer:', cardContainer);
-  console.log('currentCardIndex:', currentCardIndex);
-  console.log('shuffledUsers length:', shuffledUsers.length);
+function renderCurrentAndNextCards() {
+  if (!cardContainer) return;
   
-  if (!cardContainer) {
-    console.log('cardContainer is null');
-    return;
-  }
+  // 既存のカードを全てクリア
+  cardContainer.innerHTML = '';
   
-  // 既存のカードを全てクリアしてから描画（影の残りを防止）
-  while (cardContainer.firstChild) {
-    cardContainer.removeChild(cardContainer.firstChild);
-  }
-  
-  // 次のカードを表示
+  // 現在のカードを表示
   if (currentCardIndex < shuffledUsers.length) {
-    console.log('Creating next card for user:', shuffledUsers[currentCardIndex].name);
-    const user = shuffledUsers[currentCardIndex];
-    const card = createCard(user, true);
-    cardContainer.appendChild(card);
-    currentCard = card;
+    const currentUser = shuffledUsers[currentCardIndex];
+    const currentCardElement = createCard(currentUser, true);
+    cardContainer.appendChild(currentCardElement);
+    currentCard = currentCardElement;
     
-    // 次のカードも表示（背景1枚のみ）
-    if (currentCardIndex + 1 < shuffledUsers.length) {
-      console.log('Creating background card for user:', shuffledUsers[currentCardIndex + 1].name);
-      const nextUser = shuffledUsers[currentCardIndex + 1];
-      const nextCard = createCard(nextUser, false);
-      cardContainer.appendChild(nextCard);
-    }
-    
-    // 操作ボタンのイベントを再設定
-    bindActionButtons();
-    console.log('Next card rendered successfully');
-  } else {
-    console.log('currentCardIndex out of bounds');
+    // 次のカードを背景に表示
+    const nextIndex = (currentCardIndex + 1) % shuffledUsers.length;
+    const nextUser = shuffledUsers[nextIndex];
+    const nextCardElement = createCard(nextUser, false);
+    cardContainer.appendChild(nextCardElement);
   }
+  
+  // 操作ボタンのイベントを再設定
+  bindActionButtons();
 }

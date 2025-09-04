@@ -102,8 +102,9 @@
 /* カードスタイル */
 .card {
   position: absolute;
-  width: 100%;
-  max-width: 320px; /* 少し小さくする */
+  width: 320px; /* 固定幅 */
+  height: 450px; /* 高さを少し増やす */
+  max-width: 320px;
   background: white;
   border-radius: 20px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
@@ -182,6 +183,11 @@
 /* カードコンテンツ */
 .card-content {
   padding: 16px; /* 余白を少し詰める */
+  height: calc(100% - 170px); /* 画像部分を除いた高さを固定 */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* 上揃えに変更 */
+  overflow-y: auto; /* スクロール可能に */
 }
 
 .user-info {
