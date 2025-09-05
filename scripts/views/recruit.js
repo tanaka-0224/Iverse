@@ -56,22 +56,61 @@ export function renderRecruit(){
   const meName = state.me?.name || "";
   const mine = (state.recruits||[]).filter(r=>r.author===meName);
 
-  wrap.innerHTML = mine.length ? "" : `<div class="hint">まだ募集はありません。</div>`;
+  wrap.innerHTML = "";
+  
   mine.forEach(r=>{
     const div = document.createElement("div");
-    div.className = "card recruit-card";
+    div.className = "recruit-card";
+    
+    const typeIcon = r.type === 'group' ? '👥' : '👤';
+    const typeText = r.type === 'group' ? 'グループ' : '個人';
+    const typeClass = r.type === 'group' ? 'group' : 'individual';
+    
     div.innerHTML = `
-      <div class="rc-title" style="writing-mode:horizontal-tb;white-space:nowrap;font-weight:700;margin-bottom:4px;">
-        ${r.type==="group" ? "グループ募集" : "個人募集"}
+      <div class="recruit-card-header">
+        <span class="recruit-type ${typeClass}">
+          <span>${typeIcon}</span>
+          ${typeText}
+        </span>
+        <button class="delete-btn" data-recruit-id="${r.id}">🗑️ 削除</button>
       </div>
-      ${r.groupName ? `<div class="muted">グループ名：${escapeHtml(r.groupName)}</div>` : ""}
-      <div class="muted" style="margin:6px 0;"><span class="badge">目的・スキル</span> ${escapeHtml(r.goals)}</div>
-      <div class="muted" style="white-space:pre-wrap;">${escapeHtml(r.detail)}</div>
-      <div class="tiny muted" style="margin-top:6px;">
-        ${new Date(r.createdAt).toLocaleString()}／投稿者：${escapeHtml(r.author)}
-      </div>`;
+      <div class="recruit-content">
+        <div class="recruit-goals">${escapeHtml(r.goals)}</div>
+        <div class="recruit-detail">${escapeHtml(r.detail)}</div>
+        ${r.groupName ? `<div class="recruit-group-name">🏷️ ${escapeHtml(r.groupName)}</div>` : ''}
+      </div>
+      <div class="recruit-meta">
+        <div class="recruit-date">
+          <span>📅</span>
+          <span>${new Date(r.createdAt).toLocaleDateString('ja-JP')}</span>
+        </div>
+      </div>
+    `;
+    
+    // 削除ボタンのイベントリスナーを追加
+    const deleteBtn = div.querySelector('.delete-btn');
+    deleteBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (confirm('この募集を削除しますか？')) {
+        deleteRecruit(r.id);
+      }
+    });
+    
     wrap.appendChild(div);
   });
+}
+
+// 募集削除関数
+function deleteRecruit(recruitId) {
+  if (!state.recruits) return;
+  
+  const index = state.recruits.findIndex(r => r.id === recruitId);
+  if (index !== -1) {
+    state.recruits.splice(index, 1);
+    save();
+    renderRecruit();
+    alert('募集を削除しました。');
+  }
 }
 
 function escapeHtml(s){
