@@ -1,41 +1,77 @@
 <section id="view-recruit" class="view hidden">
-  <h2>募集を作成</h2>
-
-  <div class="card">
-    <!-- 個人 / グループ ラジオ -->
-    <div id="radio-type-grid">
-      <div class="rt-label">個人</div>
-      <div class="rt-ctrl">
-        <input type="radio" name="recruit-type" value="individual" checked>
-      </div>
-
-      <div class="rt-label">グループ</div>
-      <div class="rt-ctrl">
-        <input type="radio" name="recruit-type" value="group">
-      </div>
-    </div>
-
-    <!-- グループ名（グループ選択時のみ表示） -->
-    <div id="group-name-row" class="row hidden">
-      <label for="recruit-group">グループ名（グループ選択時）</label>
-      <textarea id="recruit-group" rows="2" placeholder="例：Iverse 英語学習チームA"></textarea>
-    </div>
-
-    <!-- 目的・スキル -->
-    <label for="recruit-goals">目的・スキル</label>
-    <textarea id="recruit-goals" rows="3" placeholder="例：英語学習, TOEIC"></textarea>
-
-    <!-- 詳細 -->
-    <label for="recruit-detail">詳細</label>
-    <textarea id="recruit-detail" rows="5" placeholder="例：毎週1回オンライン勉強会／募集人数3人"></textarea>
-
-    <button id="recruit-submit" type="button">募集を投稿</button>
+  <div class="recruit-header">
+    <h2>📝 募集を作成</h2>
+    <p class="recruit-description">新しいプロジェクトや学習グループのメンバーを募集しましょう</p>
   </div>
 
-  <h3>自分の募集</h3>
-  <div class="row" style="margin:8px 0 12px;">
-    <input id="recruit-filter" type="text" placeholder="目的で絞り込み（例：英語, 起業）"
-           style="width:100%;padding:8px 10px;border:1px solid #d1d5db;border-radius:6px;">
+  <div class="recruit-form-container">
+    <div class="form-card">
+      <!-- 募集タイプ選択 -->
+      <div class="form-section">
+        <h3>📋 募集タイプ</h3>
+        <div id="radio-type-grid">
+          <div class="radio-option">
+            <input type="radio" name="recruit-type" value="individual" id="type-individual" checked>
+            <label for="type-individual">
+              <span class="radio-icon">👤</span>
+              <span class="radio-text">個人</span>
+              <span class="radio-desc">一人で参加</span>
+            </label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" name="recruit-type" value="group" id="type-group">
+            <label for="type-group">
+              <span class="radio-icon">👥</span>
+              <span class="radio-text">グループ</span>
+              <span class="radio-desc">チームで参加</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- グループ名（グループ選択時のみ表示） -->
+      <div id="group-name-row" class="form-section hidden">
+        <h3>🏷️ グループ名</h3>
+        <div class="input-group">
+          <label for="recruit-group">グループ名を入力してください</label>
+          <textarea id="recruit-group" rows="2" placeholder="例：Iverse 英語学習チームA"></textarea>
+        </div>
+      </div>
+
+      <!-- 目的・スキル -->
+      <div class="form-section">
+        <h3>🎯 目的・スキル</h3>
+        <div class="input-group">
+          <label for="recruit-goals">学習したい内容や身につけたいスキルを入力してください</label>
+          <textarea id="recruit-goals" rows="3" placeholder="例：英語学習, TOEIC, プログラミング, デザイン"></textarea>
+        </div>
+      </div>
+
+      <!-- 詳細 -->
+      <div class="form-section">
+        <h3>📝 詳細情報</h3>
+        <div class="input-group">
+          <label for="recruit-detail">活動内容、頻度、募集人数などの詳細を入力してください</label>
+          <textarea id="recruit-detail" rows="5" placeholder="例：毎週1回オンライン勉強会／募集人数3人／初心者歓迎"></textarea>
+        </div>
+      </div>
+
+      <!-- 投稿ボタン -->
+      <div class="form-actions">
+        <button id="recruit-submit" type="button" class="submit-btn">
+          <span class="btn-icon">🚀</span>
+          募集を投稿する
+        </button>
+      </div>
+    </div>
   </div>
-  <div id="recruit-list" class="grid"></div>
+
+  <!-- 現在の募集一覧 -->
+  <div class="recruits-list-container">
+    <div class="recruits-header">
+      <h3>📋 現在の募集一覧</h3>
+      <p class="recruits-description">あなたが投稿した募集を確認できます</p>
+    </div>
+    <div id="recruit-list" class="recruits-grid"></div>
+  </div>
 </section>

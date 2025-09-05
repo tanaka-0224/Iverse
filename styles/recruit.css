@@ -1,91 +1,467 @@
-#view-recruit { max-width: 900px; margin: 24px auto; padding: 0 16px; }
-#view-recruit textarea{
-  width:100%; padding:10px 12px; border:1px solid #d1d5db; border-radius:6px;
-  font-size:14px; margin:6px 0 14px; background:#fff;
+#view-recruit { 
+  max-width: 800px; 
+  margin: 0 auto; 
+  padding: 24px 16px; 
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
 }
 
-.recruit-card{
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  margin-bottom: 12px;
-}
-.recruit-card:hover{
-  transform: translateY(-3px);
-  box-shadow: 0 8px 18px rgba(0,0,0,.12);
-}
-.badge{ background:#eef3ff; color:#3355aa; padding:2px 8px; border-radius:999px; font-size:12px; }
-.muted{ color:#6b7280; }
-.tiny{ font-size:12px; }
-
-#view-recruit #radio-type-grid{
-  display:grid;
-  grid-template-columns: 110px 1fr;
-  column-gap:16px;
-  row-gap:12px;
-  align-items:center;
-  margin:12px 0;
-}
-#view-recruit #radio-type-grid .rt-label{
-  writing-mode: horizontal-tb;
-  height: 28px;
-  line-height: 28px;
-  display: flex;
-  align-items: center;
-  color:#374151;
-}
-#view-recruit #radio-type-grid .rt-ctrl{
-  display:flex;
-  align-items:center;
-  height:28px;                  
-}
-#view-recruit #radio-type-grid .rt-ctrl input[type="radio"]{
- position: relative;
-  top: -2px;   /* 必要なら -1px/-3px に調整 */
-  margin: 0  
+/* ヘッダーセクション */
+.recruit-header {
+  text-align: center;
+  margin-bottom: 32px;
 }
 
-#view-recruit #radio-type-grid{
-  display: grid;
-  grid-template-columns: 110px 1fr;
-  column-gap: 16px;
-  row-gap: 12px;
-  align-items: center;
-  margin: 12px 0;
+.recruit-header h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 8px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-#view-recruit #radio-type-grid .rt-label{
-  height: 28px;
-  line-height: 28px;
-  display: flex;
-  align-items: center;
-  writing-mode: horizontal-tb;
-}
-
-#view-recruit #radio-type-grid .rt-ctrl input[type="radio"]{
-  position: relative;
-  top: -2px;  /* -1〜-3pxで微調整可 */
+.recruit-description {
+  font-size: 1.1rem;
+  color: #64748b;
   margin: 0;
 }
 
-/* 自分の募集カードにだけ適用（他へ影響しない） */
-#view-recruit .recruit-card{
+/* フォームコンテナ */
+.recruit-form-container {
   display: flex;
-  flex-direction: column;   /* 横並びで崩れるのを防ぐ */
+  justify-content: center;
+}
+
+.form-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  padding: 32px;
+  width: 100%;
+  max-width: 600px;
+  border: 1px solid #e2e8f0;
+}
+
+/* フォームセクション */
+.form-section {
+  margin-bottom: 32px;
+}
+
+.form-section h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 入力グループ */
+.input-group {
+  margin-bottom: 16px;
+}
+
+.input-group label {
+  display: block;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+}
+
+/* テキストエリア */
+#view-recruit textarea {
+  width: 100%; 
+  padding: 12px 16px; 
+  border: 2px solid #e2e8f0; 
+  border-radius: 8px;
+  font-size: 16px; 
+  margin: 0;
+  background: #fff;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 80px;
+}
+
+#view-recruit textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+#view-recruit textarea::placeholder {
+  color: #9ca3af;
+  font-style: italic;
+}
+
+/* ラジオボタングリッド */
+#view-recruit #radio-type-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 0;
+}
+
+/* ラジオオプション */
+.radio-option {
+  position: relative;
+}
+
+.radio-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.radio-option label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #fff;
+  text-align: center;
+  min-height: 120px;
+  justify-content: center;
+}
+
+.radio-option label:hover {
+  border-color: #3b82f6;
+  background: #f8fafc;
+}
+
+.radio-option input[type="radio"]:checked + label {
+  border-color: #3b82f6;
+  background: #eff6ff;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+.radio-icon {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.radio-text {
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 4px;
+  font-size: 1.1rem;
+}
+
+.radio-desc {
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+/* フォームアクション */
+.form-actions {
+  text-align: center;
+  margin-top: 32px;
+}
+
+.submit-btn {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: white;
+  border: none;
+  padding: 16px 32px;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+.submit-btn:active {
+  transform: translateY(0);
+}
+
+.btn-icon {
+  font-size: 1.2rem;
+}
+/* レスポンシブデザイン */
+@media (max-width: 768px) {
+  #view-recruit {
+    padding: 16px 12px;
+  }
+  
+  .recruit-header h2 {
+    font-size: 2rem;
+  }
+  
+  .form-card {
+    padding: 24px 20px;
+  }
+  
+  #view-recruit #radio-type-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .radio-option label {
+    min-height: 100px;
+    padding: 16px;
+  }
+  
+  .submit-btn {
+    width: 100%;
+    padding: 14px 24px;
+  }
+}
+
+/* 募集一覧セクション */
+.recruits-list-container {
+  margin-top: 48px;
+  padding: 0 16px;
+}
+
+.recruits-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.recruits-header h3 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.recruits-description {
+  color: #64748b;
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* 募集一覧グリッド */
+.recruits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+}
+
+/* 募集カード */
+.recruit-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.recruit-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.recruit-card-header {
+  display: flex;
+  justify-content: space-between;
   align-items: flex-start;
-  gap: 6px;
+  margin-bottom: 16px;
 }
 
-/* カード配下は強制で横書きに戻す（縦書き指定を打ち消し） */
-#view-recruit .recruit-card,
-#view-recruit .recruit-card *{
-  writing-mode: horizontal-tb !important;
-  text-orientation: mixed !important;
+.recruit-type {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
 }
 
-/* タイトル体裁（任意） */
+.recruit-type.individual {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.recruit-type.group {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.delete-btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+}
+
+.delete-btn:hover {
+  background: #dc2626;
+  transform: scale(1.05);
+}
+
+.recruit-content {
+  margin-bottom: 16px;
+}
+
+.recruit-goals {
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 8px;
+  font-size: 1.1rem;
+}
+
+.recruit-detail {
+  color: #6b7280;
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.recruit-group-name {
+  background: #f3f4f6;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #374151;
+  margin-bottom: 12px;
+  border-left: 3px solid #3b82f6;
+}
+
+.recruit-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: #9ca3af;
+  border-top: 1px solid #f3f4f6;
+  padding-top: 12px;
+}
+
+.recruit-date {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* 空の状態 */
+.recruits-grid:empty::before {
+  content: "まだ募集がありません。上のフォームから新しい募集を作成してください。";
+  display: block;
+  text-align: center;
+  color: #9ca3af;
+  font-style: italic;
+  padding: 48px 24px;
+  background: #f9fafb;
+  border-radius: 12px;
+  border: 2px dashed #d1d5db;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .recruits-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .recruit-card {
+    padding: 20px;
+  }
+  
+  .recruits-list-container {
+    margin-top: 32px;
+    padding: 0 8px;
+  }
+}
+
+
+
+
+
+/* 募集カードヘッダー */
+#view-recruit .recruit-card .rc-header{
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
 #view-recruit .recruit-card .rc-title{
   font-weight: 700;
   margin-bottom: 4px;
+  color: #1f2937;
+  flex: 1;
+  word-wrap: break-word;
 }
-.hidden { display: none !important; }
+
+/* 削除ボタン */
+#view-recruit .recruit-card .delete-btn{
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  margin-left: 8px;
+  flex-shrink: 0;
+}
+
+#view-recruit .recruit-card .delete-btn:hover{
+  background: #dc2626;
+  transform: scale(1.05);
+}
+
+#view-recruit .recruit-card .delete-btn:active{
+  transform: scale(0.95);
+}
+
+/* 共通スタイル */
+.badge{ 
+  background: #eef3ff; 
+  color: #3355aa; 
+  padding: 2px 8px; 
+  border-radius: 999px; 
+  font-size: 12px; 
+}
+
+.muted{ 
+  color: #6b7280; 
+}
+
+.tiny{ 
+  font-size: 12px; 
+}
+
+.hidden { 
+  display: none !important; 
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  #view-recruit #recruit-list {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  #view-recruit .recruit-card {
+    padding: 12px;
+  }
+}
