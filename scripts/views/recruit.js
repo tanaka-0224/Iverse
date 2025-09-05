@@ -7,16 +7,23 @@ export function initRecruit(){
 
   if (!Array.isArray(state.recruits)) state.recruits = [];
 
-  const groupBox = document.getElementById("recruit-group");
+  function updateGroupField(){
+  var checked = document.querySelector('input[name="recruit-type"]:checked');
+  var type = checked ? checked.value : "individual";
+  var row = document.getElementById('group-name-row');
+  var ta  = document.getElementById('recruit-group');
+  var isGroup = (type === 'group');
+  if (row) {
+    if (isGroup) row.classList.remove('hidden');
+    else row.classList.add('hidden');
+  }
+  if (ta) ta.disabled = !isGroup;
+}
+
   document.querySelectorAll('input[name="recruit-type"]').forEach(r=>{
-    r.addEventListener("change", ()=>{
-      const isGroup = document.querySelector('input[name="recruit-type"]:checked')?.value === "group";
-      if (groupBox){
-        groupBox.disabled = !isGroup;
-        if (!isGroup) groupBox.value = "";
-      }
-    });
+    r.addEventListener('change', updateGroupField);
   });
+  updateGroupField(); 
 
   document.getElementById("recruit-submit")?.addEventListener("click", ()=>{
     if (!state.me){ alert("ログインしてください。"); return; }
